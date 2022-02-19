@@ -1,8 +1,5 @@
 #pragma once
 
-#include <initializer_list>
-#include <memory>
-
 template<typename T>
 class Vector
 {
@@ -113,14 +110,63 @@ public:
 
 	// Element access
 
+	inline T& at(size_t pos)
+	{
+		if (pos < 0 || pos >= mSize)
+			throw std::out_of_range("invalid Vector subscript");
+
+		return mData[pos];
+	}
+
+	inline const T& at(size_t pos) const
+	{
+		if (pos < 0 || pos >= mSize)
+			throw std::out_of_range("invalid Vector subscript");
+
+		return mData[pos];
+	}
+
+
+	// operator [] : 범위가 넘어가면 에러를 일으켜야 함.
+	// 하지만 현재는 size를 넘는 인덱스를 접근하더라도 capacity 내외라면 접근이 된다.
 	inline T& operator[](size_t pos)
 	{
 		return mData[pos];
 	}
-
+	
 	inline const T& operator[](size_t pos) const
 	{
 		return mData[pos];
+	}
+
+	inline T& front()
+	{
+		return mData[0];
+	}
+
+	inline const T& front() const
+	{
+		return mData[0];
+	}
+
+	inline T& back()
+	{
+		return mData[mSize - 1];
+	}
+
+	inline const T& back() const
+	{
+		return mData[mSize - 1];
+	}
+
+	inline T* data() noexcept
+	{
+		return mData;
+	}
+
+	inline const T* data() const noexcept
+	{
+		return mData;
 	}
 
 	//
@@ -234,6 +280,13 @@ public:
 		mSize = newSize;
 	}
 
+	inline void swap(Vector& other)
+	{
+		std::swap(mData, other.mData);
+		std::swap(mSize, other.mSize);
+		std::swap(mCapacity, other.mCapacity);
+	}
+	
 private:
 	inline void deleteData()
 	{
@@ -249,4 +302,3 @@ private:
 	size_t mCapacity;
 	size_t mSize;
 };
-
