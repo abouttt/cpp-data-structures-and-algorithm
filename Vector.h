@@ -142,7 +142,7 @@ public:
 		memcpy(mData, other.mData, sizeof(T) * other.size());
 	}
 
-	Vector(Vector&& other)
+	Vector(Vector&& other) noexcept
 		: mData(std::move(other.mData))
 		, mCapacity(std::move(other.mCapacity))
 		, mSize(std::move(other.mSize))
@@ -179,9 +179,10 @@ public:
 		return *this;
 	}
 
-	Vector& operator=(Vector&& other)
+	Vector& operator=(Vector&& other) noexcept
 	{
-		swap(other);
+		Vector temp(std::move(other));
+		swap(temp);
 
 		return *this;
 	}
