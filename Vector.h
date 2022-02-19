@@ -69,16 +69,8 @@ public:
 	{
 		if (this != &other)
 		{
-			deleteData();
-
-			mData = new T[other.mCapacity];
-			mCapacity = other.mCapacity;
-			mSize = other.mSize;
-
-			for (size_t i = 0; i < other.mCapacity; i++)
-			{
-				mData[i] = other.mData[i];
-			}
+			Vector temp(other);
+			swap(temp);
 		}
 
 		return *this;
@@ -86,11 +78,8 @@ public:
 
 	Vector& operator=(Vector&& other)
 	{
-		std::swap(mData, other.mData);
-		std::swap(mSize, other.mSize);
-		std::swap(mCapacity, other.mCapacity);
-		other.mSize = 0;
-
+		swap(other);
+		
 		return *this;
 	}
 
@@ -106,6 +95,8 @@ public:
 
 		return *this;
 	}
+
+	//
 
 	// Element access
 
@@ -279,12 +270,18 @@ public:
 		mSize = newSize;
 	}
 
+	//
+
+	//
+
 	inline void swap(Vector& other)
 	{
 		std::swap(mData, other.mData);
-		std::swap(mSize, other.mSize);
 		std::swap(mCapacity, other.mCapacity);
+		std::swap(mSize, other.mSize);
 	}
+
+	//
 
 	//
 
