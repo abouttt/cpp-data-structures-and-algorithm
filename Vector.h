@@ -1,9 +1,12 @@
 #pragma once
 
+#include <cassert>
+
 template<typename T>
 class Vector
 {
 public:
+
 	// constructor
 
 	explicit Vector()
@@ -85,13 +88,8 @@ public:
 
 	Vector& operator=(std::initializer_list<T> ilist)
 	{
-		deleteData();
-
-		mData = new T[ilist.size()];
-		mCapacity = ilist.size();
-		mSize = ilist.size();
-
-		memcpy(mData, ilist.begin(), sizeof(T) * ilist.size());
+		Vector temp(ilist);
+		swap(temp);
 
 		return *this;
 	}
@@ -121,31 +119,43 @@ public:
 	// 하지만 현재는 size를 넘는 인덱스를 접근하더라도 capacity 내외라면 접근이 된다.
 	inline T& operator[](size_t pos)
 	{
+		assert(pos < mSize);
+
 		return mData[pos];
 	}
 	
 	inline const T& operator[](size_t pos) const
 	{
+		assert(pos < mSize);
+
 		return mData[pos];
 	}
 
 	inline T& front()
 	{
+		assert(mSize > 0);
+
 		return mData[0];
 	}
 
 	inline const T& front() const
 	{
+		assert(mSize > 0);
+
 		return mData[0];
 	}
 
 	inline T& back()
 	{
+		assert(mSize > 0);
+
 		return mData[mSize - 1];
 	}
 
 	inline const T& back() const
 	{
+		assert(mSize > 0);
+
 		return mData[mSize - 1];
 	}
 
@@ -200,8 +210,6 @@ public:
 
 	inline void clear() noexcept
 	{
-		deleteData();
-
 		mSize = 0;
 	}
 
