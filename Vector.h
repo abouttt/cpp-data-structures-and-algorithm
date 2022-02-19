@@ -66,28 +66,28 @@ private:
 			return &mDataPtr[mPos] != &other.mDataPtr[other.mPos];
 		}
 
-		Iterator& operator+(const size_t& value)
+		Iterator& operator+(const size_t value)
 		{
 			Iterator temp(mDataPtr, mPos + value);
 
 			return temp;
 		}
 
-		Iterator& operator-(const size_t& value)
+		Iterator& operator-(const size_t value)
 		{
 			Iterator temp(mDataPtr, mPos - value);
 
 			return temp;
 		}
 
-		Iterator& operator+=(const size_t& value)
+		Iterator& operator+=(const size_t value)
 		{
 			mPos += value;
 
 			return *this;
 		}
 
-		Iterator& operator-=(const size_t& value)
+		Iterator& operator-=(const size_t value)
 		{
 			mPos -= value;
 
