@@ -66,6 +66,34 @@ private:
 			return &mDataPtr[mPos] != &other.mDataPtr[other.mPos];
 		}
 
+		Iterator& operator+(const size_t& value)
+		{
+			Iterator temp(mDataPtr, mPos + value);
+
+			return temp;
+		}
+
+		Iterator& operator-(const size_t& value)
+		{
+			Iterator temp(mDataPtr, mPos - value);
+
+			return temp;
+		}
+
+		Iterator& operator+=(const size_t& value)
+		{
+			mPos += value;
+
+			return *this;
+		}
+
+		Iterator& operator-=(const size_t& value)
+		{
+			mPos -= value;
+
+			return *this;
+		}
+
 		operator size_t()
 		{
 			return mPos;
@@ -81,7 +109,7 @@ public:
 
 	// constructor
 
-	explicit Vector()
+	explicit Vector() noexcept
 		: mData(nullptr)
 		, mCapacity(0)
 		, mSize(0)
@@ -111,10 +139,7 @@ public:
 		, mCapacity(other.mCapacity)
 		, mSize(other.mSize)
 	{
-		for (size_t i = 0; i < other.size(); i++)
-		{
-			mData[i] = other.mData[i];
-		}
+		memcpy(mData, other.mData, sizeof(T) * other.size());
 	}
 
 	Vector(Vector&& other)
@@ -133,7 +158,10 @@ public:
 
 	~Vector()
 	{
-		deleteData();
+		if (mData)
+		{
+			delete mData;
+		}
 	}
 
 	//
@@ -166,6 +194,18 @@ public:
 		return *this;
 	}
 
+	inline void assign(size_t count, const T& value)
+	{
+		Vector temp(count, value);
+		swap(temp);
+	}
+
+	inline void assign(std::initializer_list<T> ilist)
+	{
+		Vector temp(ilist);
+		swap(temp);
+	}
+
 	//
 
 	// Element access
@@ -186,9 +226,6 @@ public:
 		return mData[pos];
 	}
 
-
-	// operator [] : 범위가 넘어가면 에러를 일으켜야 함.
-	// 하지만 현재는 size를 넘는 인덱스를 접근하더라도 capacity 내외라면 접근이 된다.
 	inline T& operator[](size_t pos)
 	{
 		assert(pos > -1 || pos < mSize);
@@ -281,7 +318,11 @@ public:
 		T* newData = new T[mCapacity];
 		memcpy(newData, mData, sizeof(T) * mSize);
 
-		deleteData();
+		if (mData)
+		{
+			delete mData;
+		}
+
 		mData = newData;
 	}
 
@@ -299,6 +340,7 @@ public:
 		mSize = 0;
 	}
 
+	// insert() : 올바르게 작동은 하나, 비효율적인 것 같다.
 	inline iterator insert(iterator pos, const T& value)
 	{
 		assert(pos <= mSize);
@@ -457,7 +499,11 @@ public:
 			newData[i] = value;
 		}
 
-		deleteData();
+		if (mData)
+		{
+			delete mData;
+		}
+
 		mData = newData;
 		mSize = newSize;
 	}
@@ -492,16 +538,6 @@ public:
 	inline bool operator!=(const Vector& other)
 	{
 		return !(*this == other);
-	}
-
-private:
-	inline void deleteData()
-	{
-		if (mData)
-		{
-			delete[] mData;
-			mData = nullptr;
-		}
 	}
 
 private:
