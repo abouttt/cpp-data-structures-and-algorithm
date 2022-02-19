@@ -5,7 +5,79 @@
 template<typename T>
 class Vector
 {
+private:
+	class Iterator
+	{
+	public:
+		Iterator()
+			: mDataPtr(nullptr)
+			, mPos(0)
+		{}
+
+		Iterator(T* data, size_t pos)
+			: mDataPtr(data)
+			, mPos(pos)
+		{}
+
+		Iterator& operator++()
+		{
+			++mPos;
+			return *this;
+		}
+
+		Iterator operator++(int)
+		{
+			Iterator temp = *this;
+			++mPos;
+			return temp;
+		}
+
+		Iterator& operator--()
+		{
+			--mPos;
+			return *this;
+		}
+
+		Iterator operator--(int)
+		{
+			Iterator temp = *this;
+			--mPos;
+			return temp;
+		}
+
+		T& operator*()
+		{
+			return mDataPtr[mPos];
+		}
+
+		Iterator& operator=(const Iterator& other)
+		{
+			mDataPtr = other.mDataPtr;
+			mPos = other.mPos;
+		}
+
+		bool operator==(const Iterator& other) const noexcept
+		{
+			return &mDataPtr[mPos] == &other.mDataPtr[other.mPos];
+		}
+
+		bool operator!=(const Iterator& other) const noexcept
+		{
+			return &mDataPtr[mPos] != &other.mDataPtr[other.mPos];
+		}
+
+		operator size_t()
+		{
+			return mPos;
+		}
+
+	private:
+		T* mDataPtr;
+		size_t mPos;
+	};
+
 public:
+	using iterator = Iterator;
 
 	// constructor
 
@@ -82,7 +154,7 @@ public:
 	Vector& operator=(Vector&& other)
 	{
 		swap(other);
-		
+
 		return *this;
 	}
 
@@ -119,14 +191,14 @@ public:
 	// 하지만 현재는 size를 넘는 인덱스를 접근하더라도 capacity 내외라면 접근이 된다.
 	inline T& operator[](size_t pos)
 	{
-		assert(pos < mSize);
+		assert(pos > -1 || pos < mSize);
 
 		return mData[pos];
 	}
-	
+
 	inline const T& operator[](size_t pos) const
 	{
-		assert(pos < mSize);
+		assert(pos > -1 || pos < mSize);
 
 		return mData[pos];
 	}
@@ -171,6 +243,20 @@ public:
 
 	//
 
+	// Iterators
+
+	inline iterator begin() noexcept
+	{
+		return iterator(mData, 0);
+	}
+
+	inline iterator end() noexcept
+	{
+		return iterator(mData, mSize);
+	}
+
+	//
+
 	// Capacity
 
 	inline bool empty() const noexcept
@@ -211,6 +297,104 @@ public:
 	inline void clear() noexcept
 	{
 		mSize = 0;
+	}
+
+	inline iterator insert(iterator pos, const T& value)
+	{
+		assert(pos <= mSize);
+
+		Vector temp;
+
+		for (size_t i = 0; i < pos; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		temp.push_back(value);
+
+		for (size_t i = pos; i < mSize; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		swap(temp);
+
+		return Iterator(mData, pos);
+	}
+
+	inline iterator insert(iterator pos, const T&& value)
+	{
+		assert(pos <= mSize);
+
+		Vector temp;
+
+		for (size_t i = 0; i < pos; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		temp.push_back(value);
+
+		for (size_t i = pos; i < mSize; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		swap(temp);
+
+		return Iterator(mData, pos);
+	}
+
+	inline iterator insert(iterator pos, size_t count, const T& value)
+	{
+		assert(pos <= mSize);
+
+		Vector temp;
+
+		for (size_t i = 0; i < pos; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		for (size_t i = 0; i < count; i++)
+		{
+			temp.push_back(value);
+		}
+
+		for (size_t i = pos; i < mSize; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		swap(temp);
+
+		return Iterator(mData, pos);
+	}
+
+	inline iterator insert(iterator pos, std::initializer_list<T> ilist)
+	{
+		assert(pos <= mSize);
+
+		Vector temp;
+
+		for (size_t i = 0; i < pos; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		for (auto& i : ilist)
+		{
+			temp.push_back(i);
+		}
+
+		for (size_t i = pos; i < mSize; i++)
+		{
+			temp.push_back(mData[i]);
+		}
+
+		swap(temp);
+
+		return Iterator(mData, pos);
 	}
 
 	inline void push_back(const T& value)
@@ -315,7 +499,7 @@ public:
 	{
 		return !(*this == other);
 	}
-	
+
 private:
 	inline void deleteData()
 	{
