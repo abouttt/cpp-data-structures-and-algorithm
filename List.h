@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 template<typename T>
 class List
 {
@@ -108,7 +110,7 @@ public:
 
 		for (size_t i = 0; i < count; i++)
 		{
-			push_back(value);
+			addNode(mTail, value);
 		}
 	}
 
@@ -122,7 +124,7 @@ public:
 
 		for (const T* i = init.begin(); i != init.end(); i++)
 		{
-			push_back(*i);
+			addNode(mTail, (*i));
 		}
 	}
 
@@ -136,11 +138,11 @@ public:
 
 		for (List::iterator it = other.begin(); it != other.end(); it++)
 		{
-			push_back((*it));
+			addNode(mTail, (*it));
 		}
 	}
 
-	List(List&& other)
+	List(List&& other) noexcept
 		: mHead(std::move(other.mHead))
 		, mTail(std::move(other.mTail))
 		, mSize(std::move(other.mSize))
@@ -184,9 +186,10 @@ public:
 		return *this;
 	}
 
-	List& operator=(List&& other)
+	List& operator=(List&& other) noexcept
 	{
-		swap(other);
+		List temp(std::move(other));
+		swap(temp);
 
 		return *this;
 	}
@@ -199,27 +202,47 @@ public:
 		return *this;
 	}
 
+	inline void assign(size_t count, const T& value)
+	{
+		List temp(count, value);
+		swap(temp);
+	}
+
+	inline void assign(std::initializer_list<T> ilist)
+	{
+		List temp(ilist);
+		swap(temp);
+	}
+
 	//
 
 	// Element access
 
 	inline T& front()
 	{
+		assert(mSize > 0);
+
 		return mHead->mNext->mData;
 	}
 
 	inline const T& front() const
 	{
+		assert(mSize > 0);
+
 		return mHead->mNext->mData;
 	}
 
 	inline T& back()
 	{
+		assert(mSize > 0);
+
 		return mTail->mPrev->mData;
 	}
 
 	inline const T& back() const
 	{
+		assert(mSize > 0);
+
 		return mTail->mPrev->mData;
 	}
 
@@ -229,11 +252,15 @@ public:
 
 	inline iterator begin() noexcept
 	{
+		assert(mSize > 0);
+
 		return iterator(mHead->mNext);
 	}
 
 	inline iterator end() noexcept
 	{
+		assert(mSize > 0);
+
 		return iterator(mTail);
 	}
 
@@ -259,7 +286,7 @@ public:
 	{
 		while (mSize > 0)
 		{
-			pop_back();
+			removeNode(mTail->mPrev);
 		}
 	}
 
@@ -318,6 +345,11 @@ public:
 		addNode(mTail, value);
 	}
 
+	inline void push_back(T&& value)
+	{
+		addNode(mTail, value);
+	}
+
 	inline void pop_back()
 	{
 		removeNode(mTail->mPrev);
@@ -330,12 +362,36 @@ public:
 
 	inline void push_front(T&& value)
 	{
-		addNode(mHead->mNext, std::move(value));
+		addNode(mHead->mNext, value);
 	}
 
 	inline void pop_front()
 	{
 		removeNode(mHead->mNext);
+	}
+
+	inline void resize(size_t newSize, const T& value = T())
+	{
+		size_t size = mSize;
+
+		if (newSize == size)
+		{
+			return;
+		}
+		else if (newSize < mSize)
+		{
+			for (size_t i = 0; i < size - newSize; i++)
+			{
+				removeNode(mTail->mPrev);
+			}
+		}
+		else if (newSize > mSize)
+		{
+			for (size_t i = 0; i < newSize - size; i++)
+			{
+				addNode(mTail, value);
+			}
+		}
 	}
 
 	inline void swap(List& other)
