@@ -4,7 +4,6 @@ template<typename T>
 class Vector
 {
 public:
-
 	// constructor
 
 	explicit Vector()
@@ -285,6 +284,31 @@ public:
 		std::swap(mData, other.mData);
 		std::swap(mSize, other.mSize);
 		std::swap(mCapacity, other.mCapacity);
+	}
+
+	//
+
+	inline bool operator==(const Vector& other)
+	{
+		if (mSize != other.mSize)
+		{
+			return false;
+		}
+
+		for (int i = 0; i < mSize; i++)
+		{
+			if (mData[i] != other.mData[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	inline bool operator!=(const Vector& other)
+	{
+		return !(*this == other);
 	}
 	
 private:
