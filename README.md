@@ -12,4 +12,4 @@ coding standards
 reference
 - https://en.cppreference.com/w/
 
-C++ STL 인터페이스와 동일하게 작성 하였으며 이외 코딩 스타일은 위 코딩 표준 링크에 따랐다.
+C++ STL 인터페이스와 같게 작성하였으며 이외 코딩 스타일은 위 코딩 표준 링크에 따랐다.
