@@ -34,14 +34,12 @@ public:
 	Stack& operator=(const Stack& other)
 	{
 		mData = other.mData;
-
 		return *this;
 	}
 
 	Stack& operator=(Stack&& other)
 	{
 		mData = std::move(other.mData);
-
 		return *this;
 	}
 
@@ -84,7 +82,7 @@ public:
 
 	inline void push(T&& value)
 	{
-		mData.push_back(std::move(value));
+		mData.push_back(value);
 	}
 
 	inline void pop()
