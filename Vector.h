@@ -139,7 +139,7 @@ public:
 		, mCapacity(other.mCapacity)
 		, mSize(other.mSize)
 	{
-		memcpy(mData, other.mData, sizeof(T) * other.size());
+		memcpy(mData, other.mData, sizeof(T) * other.mSize);
 	}
 
 	Vector(Vector&& other) noexcept
