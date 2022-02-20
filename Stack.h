@@ -1,6 +1,6 @@
 #pragma once
 
-// same class Vector
+#include "Vector.h"
 
 template<typename T>
 class Stack
@@ -10,40 +10,22 @@ public:
 	// constructor
 
 	explicit Stack()
-		: mData(nullptr)
-		, mCapacity(0)
-		, mSize(0)
+		: mData(Vector<T>())
 	{}
 
 	Stack(const Stack& other)
-		: mData(new T[other.mCapacity])
-		, mCapacity(other.mCapacity)
-		, mSize(other.mSize)
-	{
-		memcpy(mData, other.mData, sizeof(T) * other.mSize);
-	}
+		: mData(other.mData)
+	{}
 
-	Stack(Stack&& other)
+	Stack(Stack&& other) noexcept
 		: mData(std::move(other.mData))
-		, mCapacity(std::move(other.mCapacity))
-		, mSize(std::move(other.mSize))
-	{
-		other.mData = nullptr;
-		other.mSize = 0;
-		other.mCapacity = 0;
-	}
+	{}
 
 	//
 
 	// destructor
 
-	~Stack()
-	{
-		if (mData)
-		{
-			delete[] mData;
-		}
-	}
+	~Stack() {}
 
 	//
 
@@ -51,19 +33,14 @@ public:
 
 	Stack& operator=(const Stack& other)
 	{
-		if (this != &other)
-		{
-			Stack temp(other);
-			swap(temp);
-		}
+		mData = other.mData;
 
 		return *this;
 	}
 
 	Stack& operator=(Stack&& other)
 	{
-		Stack temp(std::move(other));
-		swap(temp);
+		mData = std::move(other.mData);
 
 		return *this;
 	}
@@ -74,12 +51,12 @@ public:
 
 	inline T& top()
 	{
-		return mData[mSize - 1];
+		return mData.back();
 	}
 
 	inline const T& top() const
 	{
-		return mData[mSize - 1];
+		return mData.back();
 	}
 
 	//
@@ -88,12 +65,12 @@ public:
 
 	inline bool empty() const
 	{
-		return mSize == 0;
+		return mData.empty();
 	}
 
 	inline size_t size() const
 	{
-		return mSize;
+		return mData.size();
 	}
 
 	//
@@ -102,72 +79,24 @@ public:
 
 	inline void push(const T& value)
 	{
-		if (mSize == mCapacity)
-		{
-			size_t newCapacity = static_cast<size_t>(mCapacity * 1.5f);
-			if (newCapacity == mCapacity)
-			{
-				newCapacity++;
-			}
-
-			reserve(newCapacity);
-		}
-
-		mData[mSize++] = value;
+		mData.push_back(value);
 	}
 
 	inline void push(T&& value)
 	{
-		if (mSize == mCapacity)
-		{
-			size_t newCapacity = static_cast<size_t>(mCapacity * 1.5f);
-			if (newCapacity == mCapacity)
-			{
-				newCapacity++;
-			}
-
-			reserve(newCapacity);
-		}
-
-		mData[mSize++] = value;
+		mData.push_back(std::move(value));
 	}
 
 	inline void pop()
 	{
-		mSize = mSize > 0 ? mSize - 1 : 0;
+		mData.pop_back();
 	}
 
 	inline void swap(Stack& other) noexcept
 	{
-		std::swap(mData, other.mData);
-		std::swap(mCapacity, other.mCapacity);
-		std::swap(mSize, other.mSize);
+		mData.size(other);
 	}
 
 private:
-	inline void reserve(size_t newCapacity)
-	{
-		if (mCapacity >= newCapacity)
-		{
-			return;
-		}
-
-		mCapacity = newCapacity;
-
-		T* newData = new T[mCapacity];
-		memcpy(newData, mData, sizeof(T) * mSize);
-
-		if (mData)
-		{
-			delete mData;
-		}
-
-		mData = newData;
-	}
-
-
-private:
-	T* mData;
-	size_t mCapacity;
-	size_t mSize;
+	Vector<T> mData;
 };
