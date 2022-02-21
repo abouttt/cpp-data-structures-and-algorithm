@@ -1,8 +1,10 @@
 #pragma once
 
+#include <deque>
+
 #include "Vector.h"
 
-template<typename T>
+template<typename T, typename Container = std::deque<T>>
 class Stack
 {
 public:
@@ -10,15 +12,15 @@ public:
 	// constructor
 
 	explicit Stack()
-		: mData(Vector<T>())
+		: mContainer(Container())
 	{}
 
 	Stack(const Stack& other)
-		: mData(other.mData)
+		: mContainer(other.mContainer)
 	{}
 
 	Stack(Stack&& other) noexcept
-		: mData(std::move(other.mData))
+		: mContainer(std::move(other.mContainer))
 	{}
 
 	//
@@ -33,13 +35,13 @@ public:
 
 	Stack& operator=(const Stack& other)
 	{
-		mData = other.mData;
+		mContainer = other.mContainer;
 		return *this;
 	}
 
 	Stack& operator=(Stack&& other)
 	{
-		mData = std::move(other.mData);
+		mContainer = std::move(other.mContainer);
 		return *this;
 	}
 
@@ -49,12 +51,12 @@ public:
 
 	inline T& top()
 	{
-		return mData.back();
+		return mContainer.back();
 	}
 
 	inline const T& top() const
 	{
-		return mData.back();
+		return mContainer.back();
 	}
 
 	//
@@ -63,12 +65,12 @@ public:
 
 	inline bool empty() const
 	{
-		return mData.empty();
+		return mContainer.empty();
 	}
 
 	inline size_t size() const
 	{
-		return mData.size();
+		return mContainer.size();
 	}
 
 	//
@@ -77,24 +79,24 @@ public:
 
 	inline void push(const T& value)
 	{
-		mData.push_back(value);
+		return mContainer.push_back(value);
 	}
 
 	inline void push(T&& value)
 	{
-		mData.push_back(value);
+		return mContainer.push_back(value);
 	}
 
 	inline void pop()
 	{
-		mData.pop_back();
+		mContainer.pop_back();
 	}
 
 	inline void swap(Stack& other) noexcept
 	{
-		mData.size(other);
+		mContainer.swap(other.mContainer);
 	}
 
 private:
-	Vector<T> mData;
+	Container mContainer;
 };
