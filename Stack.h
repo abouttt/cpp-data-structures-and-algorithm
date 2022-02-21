@@ -10,7 +10,7 @@ public:
 	// constructor
 
 	explicit Stack()
-		: mContainer(Container())
+		: mContainer()
 	{}
 
 	Stack(const Stack& other)
@@ -82,7 +82,7 @@ public:
 
 	inline void push(T&& value)
 	{
-		return mContainer.push_back(value);
+		return mContainer.push_back(std::move(value));
 	}
 
 	inline void pop()
