@@ -142,7 +142,7 @@ public:
 		memcpy(mData, other.mData, sizeof(T) * other.mSize);
 	}
 
-	Vector(Vector&& other) noexcept
+	Vector(Vector&& other)
 		: mData(std::move(other.mData))
 		, mCapacity(std::move(other.mCapacity))
 		, mSize(std::move(other.mSize))
@@ -179,7 +179,7 @@ public:
 		return *this;
 	}
 
-	Vector& operator=(Vector&& other) noexcept
+	Vector& operator=(Vector&& other)
 	{
 		Vector temp(std::move(other));
 		swap(temp);
@@ -509,7 +509,7 @@ public:
 		mSize = newSize;
 	}
 
-	inline void swap(Vector& other)
+	inline void swap(Vector& other) noexcept
 	{
 		std::swap(mData, other.mData);
 		std::swap(mCapacity, other.mCapacity);

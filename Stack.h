@@ -17,7 +17,7 @@ public:
 		: mContainer(other.mContainer)
 	{}
 
-	Stack(Stack&& other) noexcept
+	Stack(Stack&& other)
 		: mContainer(std::move(other.mContainer))
 	{}
 

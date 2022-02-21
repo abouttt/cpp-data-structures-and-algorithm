@@ -148,7 +148,7 @@ public:
 		}
 	}
 
-	List(List&& other) noexcept
+	List(List&& other)
 		: mHead(std::move(other.mHead))
 		, mTail(std::move(other.mTail))
 		, mSize(std::move(other.mSize))
@@ -192,7 +192,7 @@ public:
 		return *this;
 	}
 
-	List& operator=(List&& other) noexcept
+	List& operator=(List&& other)
 	{
 		List temp(std::move(other));
 		swap(temp);
