@@ -2,7 +2,7 @@
 
 #include <deque>
 
-template<typename T,typename Container = std::deque<T>>
+template<typename T, typename Container = std::deque<T>>
 class Queue
 {
 public:
@@ -10,15 +10,15 @@ public:
 	// constructor
 
 	explicit Queue()
-		: mData(Container())
+		: mContainer()
 	{}
 
 	Queue(const Queue& other)
-		: mData(other.mData)
+		: mContainer(other.mContainer)
 	{}
 
 	Queue(Queue&& other)
-		: mData(std::move(other.mData))
+		: mContainer(std::move(other.mContainer))
 	{}
 
 	//
@@ -33,13 +33,13 @@ public:
 
 	Queue& operator=(const Queue& other)
 	{
-		mData = other.mData;
+		mContainer = other.mContainer;
 		return *this;
 	}
 
 	Queue& operator=(Queue&& other)
 	{
-		mData = std::move(other.mData);
+		mContainer = std::move(other.mContainer);
 		return *this;
 	}
 
@@ -49,22 +49,22 @@ public:
 
 	inline T& front()
 	{
-		return mData.front();
+		return mContainer.front();
 	}
 
 	inline const T& front() const
 	{
-		return mData.front();
+		return mContainer.front();
 	}
 
 	inline T& back()
 	{
-		return mData.back();
+		return mContainer.back();
 	}
 
 	inline const T& back() const
 	{
-		return mData.back();
+		return mContainer.back();
 	}
 
 	//
@@ -73,12 +73,12 @@ public:
 
 	inline bool empty() const
 	{
-		return mData.empty();
+		return mContainer.empty();
 	}
 
 	inline size_t size() const
 	{
-		return mData.size();
+		return mContainer.size();
 	}
 
 	//
@@ -87,24 +87,24 @@ public:
 
 	inline void push(const T& value)
 	{
-		mData.push_back(value);
+		mContainer.push_back(value);
 	}
 
 	inline void push(T&& value)
 	{
-		mData.push_back(value);
+		mContainer.push_back(std::move(value));
 	}
 
 	inline void pop()
 	{
-		mData.pop_front();
+		mContainer.pop_front();
 	}
 
 	inline void swap(Queue& other) noexcept
 	{
-		mData.swap(other);
+		mContainer.swap(other);
 	}
 
 private:
-	Container mData;
+	Container mContainer;
 };
