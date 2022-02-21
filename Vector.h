@@ -373,14 +373,14 @@ public:
 
 		for (size_t i = 0; i < pos; i++)
 		{
-			temp.push_back(mData[i]);
+			temp.push_back(std::move(mData[i]));
 		}
 
-		temp.push_back(value);
+		temp.push_back(std::move(value));
 
 		for (size_t i = pos; i < mSize; i++)
 		{
-			temp.push_back(mData[i]);
+			temp.push_back(std::move(mData[i]));
 		}
 
 		swap(temp);
