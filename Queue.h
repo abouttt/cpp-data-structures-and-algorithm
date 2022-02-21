@@ -1,8 +1,8 @@
 #pragma once
 
-#include "List.h"
+#include <deque>
 
-template<typename T>
+template<typename T,typename Container = std::deque<T>>
 class Queue
 {
 public:
@@ -10,7 +10,7 @@ public:
 	// constructor
 
 	explicit Queue()
-		: mData(List<T>())
+		: mData(Container())
 	{}
 
 	Queue(const Queue& other)
@@ -106,5 +106,5 @@ public:
 	}
 
 private:
-	List<T> mData;
+	Container mData;
 };
