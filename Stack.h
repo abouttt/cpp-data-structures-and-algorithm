@@ -2,8 +2,6 @@
 
 #include <deque>
 
-#include "Vector.h"
-
 template<typename T, typename Container = std::deque<T>>
 class Stack
 {
