@@ -24,6 +24,12 @@ private:
 			, mData(value)
 		{}
 
+		Node(T&& value)
+			: mPrev(nullptr)
+			, mNext(nullptr)
+			, mData(std::move(value))
+		{}
+
 	private:
 		Node* mPrev;
 		Node* mNext;
@@ -347,7 +353,7 @@ public:
 
 	inline void push_back(T&& value)
 	{
-		addNode(mTail, value);
+		addNode(mTail, std::move(value));
 	}
 
 	inline void pop_back()
@@ -362,7 +368,7 @@ public:
 
 	inline void push_front(T&& value)
 	{
-		addNode(mHead->mNext, value);
+		addNode(mHead->mNext, std::move(value));
 	}
 
 	inline void pop_front()
@@ -407,6 +413,22 @@ private:
 	Node* addNode(Node* before, const T& value)
 	{
 		Node* newNode = new Node(value);
+		Node* prevNode = before->mPrev;
+
+		prevNode->mNext = newNode;
+		newNode->mPrev = prevNode;
+
+		newNode->mNext = before;
+		before->mPrev = newNode;
+
+		mSize++;
+
+		return newNode;
+	}
+
+	Node* addNode(Node* before, T&& value)
+	{
+		Node* newNode = new Node(std::move(value));
 		Node* prevNode = before->mPrev;
 
 		prevNode->mNext = newNode;
