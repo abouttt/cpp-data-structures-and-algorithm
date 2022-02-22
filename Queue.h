@@ -17,7 +17,7 @@ public:
 		: mContainer(other.mContainer)
 	{}
 
-	Queue(Queue&& other)
+	Queue(Queue&& other) noexcept
 		: mContainer(std::move(other.mContainer))
 	{}
 
@@ -37,7 +37,7 @@ public:
 		return *this;
 	}
 
-	Queue& operator=(Queue&& other)
+	Queue& operator=(Queue&& other) noexcept
 	{
 		mContainer = std::move(other.mContainer);
 		return *this;

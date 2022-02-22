@@ -17,7 +17,7 @@ public:
 		: mContainer(other.mContainer)
 	{}
 
-	Stack(Stack&& other)
+	Stack(Stack&& other) noexcept
 		: mContainer(std::move(other.mContainer))
 	{}
 
@@ -37,7 +37,7 @@ public:
 		return *this;
 	}
 
-	Stack& operator=(Stack&& other)
+	Stack& operator=(Stack&& other) noexcept
 	{
 		mContainer = std::move(other.mContainer);
 		return *this;

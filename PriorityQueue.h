@@ -31,7 +31,7 @@ public:
 		, mCompare(other.mCompare)
 	{}
 
-	PriorityQueue(PriorityQueue&& other)
+	PriorityQueue(PriorityQueue&& other) noexcept
 		: mContainer(std::move(other.mContainer))
 		, mCompare(std::move(other.mCompare))
 	{}
@@ -53,7 +53,7 @@ public:
 		return *this;
 	}
 
-	PriorityQueue& operator=(PriorityQueue&& other)
+	PriorityQueue& operator=(PriorityQueue&& other) noexcept
 	{
 		mContainer = std::move(other.mContainer);
 		mCompare = std::move(other.mCompare);

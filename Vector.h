@@ -142,7 +142,7 @@ public:
 		memcpy(mData, other.mData, sizeof(T) * other.mSize);
 	}
 
-	Vector(Vector&& other)
+	Vector(Vector&& other) noexcept
 		: mData(std::move(other.mData))
 		, mCapacity(std::move(other.mCapacity))
 		, mSize(std::move(other.mSize))
@@ -456,7 +456,7 @@ public:
 		mData[mSize++] = value;
 	}
 
-	inline void push_back(T&& value)
+	inline void push_back(T&& value) noexcept
 	{
 		if (mSize == mCapacity)
 		{

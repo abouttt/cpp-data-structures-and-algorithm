@@ -24,7 +24,7 @@ private:
 			, mData(value)
 		{}
 
-		Node(T&& value)
+		Node(T&& value) noexcept
 			: mPrev(nullptr)
 			, mNext(nullptr)
 			, mData(std::move(value))
@@ -148,7 +148,7 @@ public:
 		}
 	}
 
-	List(List&& other)
+	List(List&& other) noexcept
 		: mHead(std::move(other.mHead))
 		, mTail(std::move(other.mTail))
 		, mSize(std::move(other.mSize))
@@ -192,7 +192,7 @@ public:
 		return *this;
 	}
 
-	List& operator=(List&& other)
+	List& operator=(List&& other) noexcept
 	{
 		List temp(std::move(other));
 		swap(temp);
