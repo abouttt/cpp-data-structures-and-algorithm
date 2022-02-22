@@ -95,28 +95,22 @@ public:
 
 	inline T& at(size_type pos)
 	{
-		if (pos < 0 || pos >= mAdjList.size())
-			throw std::out_of_range("invalid Graph subscript");
-
-		return mAdjList[pos].Data;
+		return mAdjList.at(pos).mData;
 	}
 
 	inline const T& at(size_type pos) const
 	{
-		if (pos < 0 || pos >= mAdjList.size())
-			throw std::out_of_range("invalid Graph subscript");
-
-		return mAdjList[pos].Data;
+		return mAdjList.at(pos).mData;
 	}
 
 	T& operator[](size_type pos)
 	{
-		return mAdjList[pos].Data;
+		return mAdjList[pos].mData;
 	}
 
 	const T& operator[](size_type pos) const
 	{
-		return mAdjList[pos].Data;
+		return mAdjList[pos].mData;
 	}
 
 	//
