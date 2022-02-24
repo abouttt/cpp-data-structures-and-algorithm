@@ -12,12 +12,12 @@ public:
 	explicit AdjMatrixGraph() = default;
 
 	AdjMatrixGraph(const AdjMatrixGraph& other)
-		: mData(other.mData)
+		: mVertices(other.mVertices)
 		, mAdjMat(other.mAdjMat)
 	{}
 
 	AdjMatrixGraph(AdjMatrixGraph&& other)
-		: mData(std::move(other.mData))
+		: mVertices(std::move(other.mVertices))
 		, mAdjMat(std::move(other.mAdjMat))
 	{}
 
@@ -33,14 +33,14 @@ public:
 
 	AdjMatrixGraph& operator=(const AdjMatrixGraph& other)
 	{
-		mData = other.mData;
+		mVertices = other.mVertices;
 		mAdjMat = other.mAdjMat;
 		return *this;
 	}
 
 	AdjMatrixGraph& operator=(AdjMatrixGraph&& other) noexcept
 	{
-		mData = std::move(other.mData);
+		mVertices = std::move(other.mVertices);
 		mAdjMat = std::move(other.mAdjMat);
 		return *this;
 	}
@@ -51,22 +51,22 @@ public:
 
 	inline int& at(size_type pos)
 	{
-		return mData.at(pos);
+		return mVertices.at(pos);
 	}
 
 	inline const int& at(size_type pos) const
 	{
-		return mData.at(pos);
+		return mVertices.at(pos);
 	}
 
 	int& operator[](size_type pos)
 	{
-		return mData[pos];
+		return mVertices[pos];
 	}
 
 	const int& operator[](size_type pos) const
 	{
-		return mData[pos];
+		return mVertices[pos];
 	}
 
 	//
@@ -75,22 +75,27 @@ public:
 
 	inline bool empty() const noexcept
 	{
-		return mData.empty();
+		return mVertices.empty();
 	}
 
 	inline size_type size() const noexcept
 	{
-		return mData.size();
+		return mVertices.size();
 	}
 
 	inline void reserve(size_type newCapacity)
 	{
-		mData.reserve(newCapacity);
+		if (newCapacity <= mVertices.capacity())
+		{
+			return;
+		}
+
+		mVertices.reserve(newCapacity);
 	}
 
 	inline size_type capacity() const noexcept
 	{
-		return mData.capacity();
+		return mVertices.capacity();
 	}
 
 	//
@@ -99,7 +104,7 @@ public:
 
 	inline void clear() noexcept
 	{
-		mData.clear();
+		mVertices.clear();
 		mAdjMat.clear();
 	}
 
@@ -107,42 +112,42 @@ public:
 	{
 		for (auto& edge : mAdjMat)
 		{
-			edge.assign(mData.size(), false);
+			edge.assign(mVertices.size(), false);
 		}
 	}
 
 	inline void clear_edges(const T& value)
 	{
 		size_type valueIndex = findIndex(value);
-		mAdjMat[valueIndex].assign(mData.size(), false);
+		mAdjMat[valueIndex].assign(mVertices.size(), false);
 	}
 
 	// 정점 삭제시 해당 정점을 연결한 간선은 그대로 이므로
 	// 삭제할 정점에 연결된 간선을 먼저 삭제후 정점을 삭제 권장.
 	inline void erase_vertex(const T& value)
 	{
-		if (mData.size() <= 0)
+		if (mVertices.size() <= 0)
 		{
 			return;
 		}
 
-		auto eraseIt = std::find(mData.begin(), mData.end(), value);
-		if (eraseIt == mData.end())
+		auto eraseIt = std::find(mVertices.begin(), mVertices.end(), value);
+		if (eraseIt == mVertices.end())
 		{
 			return;
 		}
 
-		mData.erase(eraseIt);
-		mAdjMat.resize(mData.size());
+		mVertices.erase(eraseIt);
+		mAdjMat.resize(mVertices.size());
 		for (auto& edges : mAdjMat)
 		{
-			edges.resize(mData.size());
+			edges.resize(mVertices.size());
 		}
 	}
 
 	inline void erase_edge(const T& from, const T& to)
 	{
-		if (mData.size() <= 0)
+		if (mVertices.size() <= 0)
 		{
 			return;
 		}
@@ -155,33 +160,33 @@ public:
 
 	inline void push_back(const T& value)
 	{
-		auto it = std::find(mData.begin(), mData.end(), value);
-		if (it != mData.end())
+		auto it = std::find(mVertices.begin(), mVertices.end(), value);
+		if (it != mVertices.end())
 		{
 			return;
 		}
 
-		mData.push_back(value);
-		mAdjMat.push_back(std::vector<bool>(mData.size(), false));
+		mVertices.push_back(value);
+		mAdjMat.push_back(std::vector<bool>(mVertices.size(), false));
 		for (auto& mat : mAdjMat)
 		{
-			mat.resize(mData.size(), false);
+			mat.resize(mVertices.size(), false);
 		}
 	}
 
 	inline void push_back(const T&& value)
 	{
-		auto it = std::find(mData.begin(), mData.end(), value);
-		if (it != mData.end())
+		auto it = std::find(mVertices.begin(), mVertices.end(), value);
+		if (it != mVertices.end())
 		{
 			return;
 		}
 
-		mData.push_back(std::move(value));
-		mAdjMat.push_back(std::vector<bool>(mData.size(), false));
+		mVertices.push_back(std::move(value));
+		mAdjMat.push_back(std::vector<bool>(mVertices.size(), false));
 		for (auto& mat : mAdjMat)
 		{
-			mat.resize(mData.size(), false);
+			mat.resize(mVertices.size(), false);
 		}
 	}
 
@@ -221,19 +226,19 @@ public:
 
 	inline void swap(AdjMatrixGraph& other) noexcept
 	{
-		std::swap(mData, other.mData);
+		std::swap(mVertices, other.mVertices);
 		std::swap(mAdjMat, other.mAdjMat);
 	}
 
 	inline void dfs_search(const T& start)
 	{
-		std::vector<bool> visited(mData.size(), false);
+		std::vector<bool> visited(mVertices.size(), false);
 		dfs(start, visited);
 	}
 
 	inline void bfs_search(const T& start)
 	{
-		std::vector<bool> discovered(mData.size(), false);
+		std::vector<bool> discovered(mVertices.size(), false);
 		std::queue<size_type> q;
 		size_type startIndex = findIndex(start);
 		q.push(startIndex);
@@ -245,7 +250,7 @@ public:
 			currentInex = q.front();
 			q.pop();
 
-			std::cout << mData[currentInex] << std::endl;
+			std::cout << mVertices[currentInex] << std::endl;
 
 			for (size_type i = 0; i < mAdjMat[currentInex].size(); i++)
 			{
@@ -263,9 +268,9 @@ public:
 private:
 	inline size_type findIndex(const T& value)
 	{
-		for (size_type i = 0; i < mData.size(); i++)
+		for (size_type i = 0; i < mVertices.size(); i++)
 		{
-			if (mData[i] == value)
+			if (mVertices[i] == value)
 			{
 				return i;
 			}
@@ -281,7 +286,7 @@ private:
 
 		std::cout << current << std::endl;
 
-		for (size_type i = 0; i < mData.size(); i++)
+		for (size_type i = 0; i < mVertices.size(); i++)
 		{
 			if (mAdjMat[currentIndex][i] == false)
 			{
@@ -290,12 +295,12 @@ private:
 
 			if (visited[i] == false)
 			{
-				dfs(mData[i], visited);
+				dfs(mVertices[i], visited);
 			}
 		}
 	}
 
 private:
-	std::vector<T> mData;
+	std::vector<T> mVertices;
 	std::vector<std::vector<bool>> mAdjMat;
 };
