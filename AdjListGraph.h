@@ -335,15 +335,7 @@ public:
 private:
 	inline size_type findIndex(const T& value)
 	{
-		for (size_type i = 0; i < mVertices.size(); i++)
-		{
-			if (mVertices[i].mData == value)
-			{
-				return i;
-			}
-		}
-
-		return -1;
+		return std::find(mVertices.begin(), mVertices.end(), value) - mVertices.begin();
 	}
 
 	inline void dfs(const T& current, std::vector<bool>& visited)
