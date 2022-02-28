@@ -160,7 +160,7 @@ public:
 	{
 		if (mData)
 		{
-			delete mData;
+			delete[] mData;
 		}
 	}
 
