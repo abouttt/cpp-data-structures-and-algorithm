@@ -160,7 +160,7 @@ public:
 	{
 		if (mData)
 		{
-			delete mData;
+			delete[] mData;
 		}
 	}
 
@@ -341,7 +341,7 @@ public:
 		mSize = 0;
 	}
 
-	// insert() : ¿Ã¹Ù¸£°Ô ÀÛµ¿Àº ÇÏ³ª, ºñÈ¿À²ÀûÀÎ °Í °°´Ù.
+	// insert() : ì˜¬ë°”ë¥´ê²Œ ì‘ë™ì€ í•˜ë‚˜, ë¹„íš¨ìœ¨ì ì¸ ê²ƒ ê°™ë‹¤.
 	inline iterator insert(iterator pos, const T& value)
 	{
 		assert(pos <= mSize);
