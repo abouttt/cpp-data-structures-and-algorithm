@@ -14,6 +14,7 @@ implementation list
 - Queue
 - Vector
 - Priority Queue
+- Dijikstra
 - Graph
 - Binary Tree
 - Red-Black Tree
