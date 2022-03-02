@@ -341,7 +341,7 @@ public:
 		mSize = 0;
 	}
 
-	// insert() : ì˜¬ë°”ë¥´ê²Œ ì‘ë™ì€ í•˜ë‚˜, ë¹„íš¨ìœ¨ì ì¸ ê²ƒ ê°™ë‹¤.
+	// insert() : ¿Ã¹Ù¸£°Ô ÀÛµ¿Àº ÇÏ³ª, ºñÈ¿À²ÀûÀÎ °Í °°´Ù.
 	inline iterator insert(iterator pos, const T& value)
 	{
 		assert(pos <= mSize);
@@ -370,6 +370,7 @@ public:
 		assert(pos <= mSize);
 
 		Vector temp;
+		temp.reserve(*this->size() + 1);
 
 		for (size_t i = 0; i < pos; i++)
 		{
@@ -393,6 +394,7 @@ public:
 		assert(pos <= mSize);
 
 		Vector temp;
+		temp.reserve(*this->size() + count);
 
 		for (size_t i = 0; i < pos; i++)
 		{
@@ -419,6 +421,7 @@ public:
 		assert(pos <= mSize);
 
 		Vector temp;
+		temp.reserve(*this->size() + ilist.size());
 
 		for (size_t i = 0; i < pos; i++)
 		{
