@@ -321,7 +321,7 @@ public:
 
 		if (mData)
 		{
-			delete mData;
+			delete[] mData;
 		}
 
 		mData = newData;
@@ -505,7 +505,7 @@ public:
 
 		if (mData)
 		{
-			delete mData;
+			delete[] mData;
 		}
 
 		mData = newData;
