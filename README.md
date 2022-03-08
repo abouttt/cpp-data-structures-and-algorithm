@@ -3,11 +3,6 @@
 
 구현한 기능중 C++에서 지원하는 기능과 같다면 인터페이스는 동일하게 작성.
 
-development information
-- Windows 10
-- Visual Studio2022
-- C++20
-
 implementation list
 - Stack
 - List
